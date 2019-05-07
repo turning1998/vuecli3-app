@@ -1,14 +1,26 @@
 <template>
-    <header class="header">
+    <header class="header" :style="{background:checkedList.bgColor}">
         <div class="header-home">
-            <router-link to="/">首页</router-link>
+           <a :href="url" @click="goHome()">首页</a>
         </div>
-        <h3 class="header-title">电影</h3>
+        <h3 class="header-title">{{checkedList.title}}</h3>
       
     </header>
 </template>
 <script>
     export default {
+        data(){
+            return {
+                url:"#"
+            }
+        },
+        props:['checkedList'],
+        methods:{
+            goHome(){
+                this.url="/movie";
+            }
+
+        }
         
     }
 </script>

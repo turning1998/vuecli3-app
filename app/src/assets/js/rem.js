@@ -1,4 +1,5 @@
 ;//防止js合并时,前面得文件没有写;
+//通过监听window的resize事件，去设置html的font-size
 (function(win) {
     var doc = win.document;
     var docEl = doc.documentElement;//html
@@ -8,8 +9,8 @@
         // 获取屏幕宽度
         var width = docEl.getBoundingClientRect().width;
         var rem = width / 6.4; // 将屏幕宽度分成6.4份， 1份为1rem
-        //320/6.4=50px=1rem
-        //375/7.5=50
+        //320/6.4=50px=1rem iPone 5
+        //375/7.5=50px=1rem
       //html.
         docEl.style.fontSize = rem + 'px';
         console.log(0.14*rem);
