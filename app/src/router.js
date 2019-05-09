@@ -25,13 +25,11 @@ export default new Router({
       path: '/movie',
       name: 'movie',
       component: Movie,
-      children:[
-          {
-            path: '/moviedetail/:movieId',
-            name: 'moviedetail',
-            component: MovieDetail,
-          }
-      ]
+    },
+    {
+      path: '/moviedetail/:movieId',
+      name: 'moviedetail',
+      component: MovieDetail,
     },
     {
       path: '/book',

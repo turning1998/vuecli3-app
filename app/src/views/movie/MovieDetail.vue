@@ -1,7 +1,10 @@
 <template>
     <div>
-        {{$route.parmas.movieId}}
-        hhaha
+        <h1> {{$route.parmas.movieId}}</h1>
+         <h1> {{$route.parmas.movieId}}</h1>
+          <h1> {{$route.parmas.movieId}}</h1>
+           <h1> {{$route.parmas.movieId}}</h1>
+            <h1> {{$route.parmas.movieId}}</h1>
     </div>
 </template>
 

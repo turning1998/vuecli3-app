@@ -63,6 +63,7 @@ import axios from 'axios';//axious 装在node_modules下
            })
             },
             goDetail(Id){
+                console.log(Id);
                 this.$router.push('/moviedetail/'+Id);
                 
             }
