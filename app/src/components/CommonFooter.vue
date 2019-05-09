@@ -1,12 +1,8 @@
-//如果想要在中定义的组件上绑定事件需要加native修饰符,即@click.native 
+<!--如果想要在中定义的组件上绑定事件需要加native修饰符,即@click.native -->
 <template>
     <ul class="footer" :style="{background:bgColor}">
         <li class="footer-title"  v-for="(obj,index) in options" :key="index"> 
-            <!--可以取消点击事件是因为每一个组件对应的path都不同;
-                在created()阶段可以根据path切换内容
-            -->
-            <!-- <router-link :to='obj.path' @click.native='checkedItem(obj)'>{{obj.title}}</router-link>-->
-            <router-link :to='obj.path'>{{obj.title}}</router-link>
+            <router-link :to='obj.path ' @click.native='checkedItem(obj)'>{{obj.title}}</router-link>
         </li>
     </ul>
 </template>
@@ -23,10 +19,10 @@
         //bgColor对应当前path对应下的某一个项的背景颜色
         props:['options','bgColor'],
         methods: {
-           /*  checkedItem(obj){ 点击事件处理函数
+             checkedItem(obj){ //点击事件处理函数
                 this.checkedBgColor=obj.bgColor;
                 this.$emit('checkedItem',obj);
-            } */
+            } 
         },
         
     }

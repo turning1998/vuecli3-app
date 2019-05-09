@@ -15,8 +15,8 @@
     <div class="content">
          <router-view />
     </div>
-    <!--@checkedItem="checkedInf" -->
-    <common-footer  :options="menuList"  :bgColor="checkedListInf.bgColor"></common-footer>
+    <!-- -->
+    <common-footer  :options="menuList"  @checkedItem="checkedInf" :bgColor="checkedListInf.bgColor"></common-footer>
 
   </div>
 </template>
@@ -30,12 +30,15 @@ export default{
     let list= this.menuList.filter((obj,index)=>{
       return  obj.path==this.$route.path;//当前path对应的组件
     });
+    console.log(list);
     if(list.length){
         this.checkedListInf=list[0];
     }
     else{//没有长度 默认页面
       this.checkedListInf=this.menuList[0];
     }
+    console.log(this.checkedListInf);
+    console.log(this.checkedListInf.bgColor);
   },
   components:{
     CommonHeader,CommonFooter
@@ -73,9 +76,9 @@ export default{
     } 
   },
   methods: {
-      /*checkedInf(checkedListInf){   //footer选中的列
+      checkedInf(checkedListInf){   //footer选中的列
       this.checkedListInf=checkedListInf;
-    },*/
+    },
    
   },
 }
