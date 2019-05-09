@@ -1,11 +1,11 @@
 <template>
     <div class="movieDetail">
         <div class="movieDetail-img">
-            <img :src="MovieDetail.images.large" alt="">
+            <img src="./assets/imgs/Mloading.gif"  />
         </div>
         <div class="movieDetail-Inf">
             <h3>{{MovieDetail.title}}</h3>
-            <p>主演:<span v-for='(cast,index) in obj.casts' :key="index">cast</span></p>
+            <p>主演:<span v-for='(item,index) in MovieDetail.casts' :key="index">{{item.name}},</span></p>
         </div>
         
     </div>
