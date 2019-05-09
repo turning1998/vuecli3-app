@@ -1,7 +1,7 @@
 <template>
     <header class="header" :style="{background:checkedList.bgColor}">
         <div class="header-home">
-           <a :href="url" @click="goHome()">首页</a>
+           <span @click="$router.push('/movie')">首页</span>
         </div>
         <h3 class="header-title">{{checkedList.title}}</h3>
       
@@ -11,15 +11,12 @@
     export default {
         data(){
             return {
-                url:"#"
+    
             }
         },
         //checkedList是当前选中项
         props:['checkedList'],
         methods:{
-            goHome(){
-                this.url="/movie";
-            }
 
         }
         
@@ -46,7 +43,7 @@
     }
 
 }
-a{
+span{
     color:#fff;
 }
 
