@@ -1,6 +1,7 @@
 <template>
     <div>
-        {{$route.pramas.movieId}}
+        {{$route.parmas.movieId}}
+        hhaha
     </div>
 </template>
 
