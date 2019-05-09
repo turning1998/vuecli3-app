@@ -1,8 +1,7 @@
 <template>
-    <div>
+    <div class="movie">
         <ul>
-            <li v-for="obj in movieList" :key="obj.id" class="movieList">
-            
+            <li v-for="obj in movieList" :key="obj.id" class="movieList" @click="goDetail(obj.id)">
                 <img :src="obj.images.small" alt="" class="poster">
                 <div class="movie-info">
                     <h5>{{obj.title}}</h5>
@@ -13,8 +12,9 @@
                 </div>
             </li>
         </ul>
-        <div>
-            <img src="./assets/imgs/Mloading.gif" alt="">
+        <div class="End" v-show="isEnd">数据到底了</div>
+        <div class="loading">
+            <img src="@/assets/imgs/Mloading.gif" alt="" v-show="ImgShow">
         </div>
     </div>
 </template>
@@ -26,24 +26,53 @@ import axios from 'axios';//axious 装在node_modules下
             return{
                 movieList:[],
                 ImgShow:true,
+                isEnd:false,
             }
         },
         created(){
-            let url='https://bird.ioliu.cn/v2?url=https://api.douban.com/v2/movie/in_theaters?start=0&count=5';
-           axios.get(url).then(result=>{
-               console.log(result.data.subjects);
-               this.movieList=result.data.subjects;
-           })
-           .catch(()=>{
+            this.getMovieInf();
+        },
+        mounted() {
+             window.onscroll=()=>{
+                let slideHeight=document.documentElement.scrollTop;//滑动出去的距离 变化
+                let visibleRange=document.documentElement.clientHeight;//可视区的距离 不变
+                let fullPage=document.documentElement.scrollHeight;//整个页面的高度 不变
+                if(slideHeight+visibleRange==fullPage&&!this.isEnd){
+                    this.getMovieInf();
+                }
+            }
+        },
+        methods:{
+            getMovieInf(){
+                this.ImgShow=true;
+             
+                //let start=this.movieList.length;
+                //let url=`https://bird.ioliu.cn/v2?url=https://api.douban.com/v2/movie/in_theaters?start=${start}&count=5`;
+                let url=`https://api.myjson.com/bins/1hj1iq`;//模拟
+                axios.get(url).then(result=>{
+                    this.ImgShow=false;
+                    let getList=result.data.subjects.slice(this.movieList.length,this.movieList.length+5);//每次取5个数据
+                    if(getList.length<5){
+                        this.isEnd=true;
+                    }
+                    this.movieList=this.movieList.concat(getList);//连接两个数组 concat()返回一个新的数组
+                   //this.movieList=[...result.data.subjects,...this.movieList];
+                })
+                .catch(()=>{
                console.log("Failed to get movie list!");
-           } )
+           })
+            },
+            goDetail(Id){
+                this.$router.push('/moviedetail/'+Id);
+                
+            }
+
         }
         
     }
 </script>
 
 <style lang="scss" scoped>
-
 li.movieList{
     display: flex;
     margin: 0.2rem 0.2rem;
@@ -78,8 +107,16 @@ li.movieList{
         font-size: 15px;
     }
 }
+.loading{
+    position: fixed;
+    top: 50%;
+    left:50%;
+    transform: translate(-50%,-50%);
 
+}
+.End{
+    text-align: center;
+    color: #0080c0;
 
-
-
+}
 </style>
