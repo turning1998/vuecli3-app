@@ -14,7 +14,7 @@
             </li>
         </ul>
         <div>
-            <img src="@/assets/Mloading.gif" alt="">
+            <img src="./assets/imgs/Mloading.gif" alt="">
         </div>
     </div>
 </template>
