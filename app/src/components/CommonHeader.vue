@@ -14,6 +14,7 @@
                 url:"#"
             }
         },
+        //checkedList是当前选中项
         props:['checkedList'],
         methods:{
             goHome(){

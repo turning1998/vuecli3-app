@@ -1,15 +1,13 @@
 <!--当刷新页面时,页面会显示默认样式[此时没有传参];
-解决办法1: 在头部子组件created()阶段，向父组件传送自己的名字;
-          父组件接收以后根据子组件传送的名字，找到该对象，再传送给底部子组件
+解决办法1: 在头部子组件created()阶段，向父组件传送自己的名字;$emit('自定义事件名'，传的参数)
+          父组件接收@click=自定义事件名(参数)以后根据子组件传送的名字，找到该对象{遍历}，再传送给底部子组件
 解决办法2：vuex 
-解决办法3：在App组件的created()阶段
+解决办法3：在App组件的created()阶段 
 // console.log(location.pathname);//原生js方法:取到当前所在页面的path
 //console.log(this.$route.path);// vue方法:取到当前所在页面的path;
 根据当前的path找到相应的对象，再传送给头部和底部
 
 -->
-
-
 
 <template>
   <div id="app">
@@ -17,7 +15,8 @@
     <div class="content">
          <router-view />
     </div>
-    <common-footer  :options="menuList" @checkedItem="checkedInf" :bgColor="checkedListInf.bgColor"></common-footer>
+    <!--@checkedItem="checkedInf" -->
+    <common-footer  :options="menuList"  :bgColor="checkedListInf.bgColor"></common-footer>
 
   </div>
 </template>
@@ -27,24 +26,16 @@ import CommonFooter from '@/components/CommonFooter.vue';
 export default{
   created(){
     //this.$route.path;// vue方法:取到当前所在页面的path 
+    //在该阶段会自动切换
     let list= this.menuList.filter((obj,index)=>{
-     
-      return  obj.path==this.$route.path;
+      return  obj.path==this.$route.path;//当前path对应的组件
     });
     if(list.length){
         this.checkedListInf=list[0];
-     
-
     }
     else{//没有长度 默认页面
       this.checkedListInf=this.menuList[0];
-
-        
-         
-
     }
- 
-    
   },
   components:{
     CommonHeader,CommonFooter
@@ -77,14 +68,14 @@ export default{
           bgColor:'#0080c0',
         }
       ],
-      checkedListInf:{},//向头部传值
+      checkedListInf:{},//当前path对应的组件
 
     } 
   },
   methods: {
-    checkedInf(checkedListInf){   //footer选中的列
+      /*checkedInf(checkedListInf){   //footer选中的列
       this.checkedListInf=checkedListInf;
-    },
+    },*/
    
   },
 }
