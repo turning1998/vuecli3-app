@@ -62,9 +62,8 @@ import axios from 'axios';//axious 装在node_modules下
                console.log("Failed to get movie list!");
            })
             },
-            goDetail(Id){
-                console.log(Id);
-                this.$router.push('/moviedetail/'+Id);
+            goDetail(id){
+                this.$router.push('/moviedetail/'+id);
                 
             }
 
