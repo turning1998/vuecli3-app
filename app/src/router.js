@@ -5,10 +5,12 @@ import Book from '@/views/book/Book.vue';
 // eslint-disable-next-line import/no-unresolved
 import Movie from '@/views/movie/Movie.vue';
 // eslint-disable-next-line import/no-unresolved
+import MovieDetail from '@/views/movie/MovieDetail.vue';
+// eslint-disable-next-line import/no-unresolved
 import Music from '@/views/music/Music.vue';
 // eslint-disable-next-line import/no-unresolved
 import Photo from '@/views/photo/Photo.vue';
-import MovieDetail from './views/movie/MovieDetail.vue';
+
 Vue.use(Router);
 
 export default new Router({
@@ -40,11 +42,7 @@ export default new Router({
       name: 'music',
       component: Music,
     },
-    {
-      path: '/moviedetail',
-      name: 'moviedetail',
-      component: MovieDetail,
-    },
+
     {
       path: '/photo',
       name: 'photo',

@@ -1,14 +1,14 @@
 <template>
     <div>
-        <player></player>
+        <mplayer></mplayer>
     </div>
 </template>
 <script>
  import  Axios from 'axios';
- import Player  from '@/commponents/Player.vue';
+ import Mplayer  from '@/components/Player.vue';
     export default {
          commponents:{
-            Player,
+            Mplayer
         },
         data(){
             return{
