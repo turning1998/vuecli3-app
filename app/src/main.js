@@ -5,7 +5,6 @@ import store from './store';
 // eslint-disable-next-line import/no-unresolved
 import '@/assets/css/reset.css';
 import '@/assets/js/rem.js';
-
 Vue.config.productionTip = false;
 
 new Vue({

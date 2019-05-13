@@ -1,22 +1,29 @@
 <template>
     <div>
-        <mplayer></mplayer>
+        <player :musicInf="musicData"></player>
     </div>
 </template>
 <script>
- import  Axios from 'axios';
- import Mplayer  from '@/components/Player.vue';
+import axios from 'axios';
+import Player  from '@/components/Player.vue';
     export default {
-         commponents:{
-            Mplayer
+        components:{
+            Player
         },
         data(){
-            return{
-    
+            return {
+                musicData:[]
             }
         },
-       created(){ 
-           },
+        created(){
+            axios.get('/data/musicdata.json').then((res)=>{
+                    this.musicData=res.data.musicData;
+                    console.log(this.musicData);
+            }).catch(()=>{
+                console.log("Failed to get music data!");
+            });
+        }
+
     }
 </script>
 
