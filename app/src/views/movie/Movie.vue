@@ -1,3 +1,8 @@
+<!--跳转：
+方法1：@click="方法名" 利用this.router.push('路径名')
+方法2：<router-link to> 9)
+-->
+
 <template>
     <div class="movie">
         <ul>
