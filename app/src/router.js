@@ -8,8 +8,7 @@ import Movie from '@/views/movie/Movie.vue';
 import Music from '@/views/music/Music.vue';
 // eslint-disable-next-line import/no-unresolved
 import Photo from '@/views/photo/Photo.vue';
-import MovieDetail from './views/movie/MovieDetail.vue'
-
+import MovieDetail from './views/movie/MovieDetail.vue';
 Vue.use(Router);
 
 export default new Router({
@@ -40,6 +39,11 @@ export default new Router({
       path: '/music',
       name: 'music',
       component: Music,
+    },
+    {
+      path: '/moviedetail',
+      name: 'moviedetail',
+      component: MovieDetail,
     },
     {
       path: '/photo',
