@@ -2,8 +2,8 @@
 
  
 <!--
- watch: {                   }//现有的属性
- computed{}                  //
+ watch: {                   }//一个数据影响多个数据
+ computed{                  }//一个数据受多个数据的影响
 
 //对选中列表变色
 （1）通过当前的索引与元素的下标相对应,如果一致则添加样式
@@ -19,6 +19,7 @@ ref
 pause 暂停事件
 play  播放事件
 playing
+timeupdate  当currentTime改变时触发
 视频
 -->
 <template>
@@ -60,35 +61,50 @@ playing
 </template>
 
 <script>
+import axios from 'axios';
 import '@/assets/font/iconfont.css';
 
     export default {
         props:["musicInf"],
+        mounted(){
+            let times= this.$refs.xx;
+            //绑定事件
+            //oDiv.on事件名=function(){}; false冒泡 true捕获
+            //oDiv.addEventLister('事件名',function(){},false)
+            times.addEventListener('timeupdate',function(){
+               // console.log(times.currentTime);//获取当前播放时间
+            })
+
+          
+        },
         data() {
             return {
-                nowIndex:-1,//当前选中歌曲的索引
+                nowIndex:0,//当前选中歌曲的索引
                 albumImg:"http://singerimg.kugou.com/uploadpic/softhead/400/20180718/20180718110356316.jpg",
                 albumTitle:"我要你",
                 albumAuthor:"老狼",
                 isPlay:false,//是否播放
                 listShow:true,//歌单
-                musicAudio:'',//歌曲的音频
+                musicAudio:'http://up.mcyt.net/down/43422.mp3',//歌曲的音频
                 }
             },
         methods: {
             selected(index){
                 this.nowIndex=index;
-                this.albumTitle=music.title;
+               /*  this.albumTitle=music.title;
                 this.albumAuthor=music.author;
                 this.albumImg=music.musicImgSrc;
-                this.musicAudio=music.src;
+                this.musicAudio=music.src; */
             },
            /*  playMusic(){
                 console.log(this.$refs.xx);//获取真实DOM结构
 
             }, */
             play(){
-                this.$refs.xx.play();//获取audio下的播放方法，播放音频
+                if(this.nowIndex!=-1)
+                {
+                    this.$refs.xx.play();//获取audio下的播放方法，播放音频
+                }
 
             },
             pause(){
@@ -96,28 +112,59 @@ import '@/assets/font/iconfont.css';
 
             },
             prev(){
-                this.nowIndex--;
+                this.nowIndex--;//
                 if(this.nowIndex<0){
                     this.nowIndex=this.musicInf.length-1;
                 }
             },
             next(){
-                this.nowIndex++;
+                this.nowIndex++;//
                 if(this.nowIndex==this.musicInf.length){
                     this.nowIndex=0;
                 }
 
             },
+            //解析歌词
+            parseLrc(lrc){
+                //console.log(lrc);
+                //按照行分割
+                let line=lrc.split('\n');
+                //console.log(line);//数组
+                //时间和歌词分割：遍历数组 
+                //ref.exec(str) 匹配字符串  正则表达式下的方法
+                //str.match(reg);匹配字符串   字符串下的方法
+                line.forEach(elem=>{
+                    // /[\d{2}:\d{2}.\d{2}]/ 只要是包含这个格式的都可以
+                    //  /([\d{2}:\d{2}.\d{2}])/ 加()为子表达式  输出结果和子表达式
+                    //   /\[\d{2}:\d{2}.\d{2}\]/  时间
+                   let time= elem.match(/\[\d{2}:\d{2}.\d{2}\]/)[0];
+                   let lyric=elem.split(time)[1];//分割出歌词
+                  // console.log(elem.split(time));
+                   console.log(time);
+                  console.log(lyric);
+
+                })
+                
+
+            }
            
             
         },
+        //每次nowIndex改变，都会改变对应歌曲的消息
          watch: {                   
-                newIndex(){
+                nowIndex(){//监测nowIndex属性 只要nowIndex属性改变 对应的信息就要改变
                     let nowMusic=this.musicInf[this.nowIndex];//当前音乐对应的信息
                     this.albumTitle=nowMusic.title;
                     this.albumAuthor=nowMusic.author;
                     this.albumImg=nowMusic.musicImgSrc;
                     this.musicAudio=nowMusic.src;
+                    //加载歌词
+                    axios.get('/'+nowMusic.lrc).then((lyrics)=>{
+                         this.parseLrc(lyrics.data)
+                        //console.log(lyrics.data);
+                    }).catch(()=>{
+                        console.log("Failed to get lyrics message!");
+                    })
                     
                 }
             },
