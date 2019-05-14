@@ -18,7 +18,7 @@ import Player  from '@/components/Player.vue';
         created(){
             axios.get('/data/musicdata.json').then((res)=>{
                     this.musicData=res.data.musicData;
-                    console.log(this.musicData);
+                   // console.log(this.musicData);
             }).catch(()=>{
                 console.log("Failed to get music data!");
             });

@@ -1,6 +1,3 @@
-
-
- 
 <!--
  watch: {                   }//一个数据影响多个数据
  computed{                  }//一个数据受多个数据的影响
@@ -57,6 +54,12 @@ timeupdate  当currentTime改变时触发
         <div class="musicAudio">
              <audio ref="xx"  :src="musicAudio" autoplay controls @play="isPlay=true" @pause="isPlay=false"></audio>
         </div>
+         <!--歌词-->
+        <div class="lyric-Info" ref="lrc">
+            <ul class="lyric-Info-list">
+                <li :class="index== lrcIndex?'selected':''" v-for="(obj,index) in lrcList" :key="index">{{obj.lrc}}</li>
+            </ul>
+        </div>
     </div>
 </template>
 
@@ -71,11 +74,22 @@ import '@/assets/font/iconfont.css';
             //绑定事件
             //oDiv.on事件名=function(){}; false冒泡 true捕获
             //oDiv.addEventLister('事件名',function(){},false)
-            times.addEventListener('timeupdate',function(){
-               // console.log(times.currentTime);//获取当前播放时间
-            })
+            times.addEventListener('timeupdate',()=>{
+                //监听timeupdate事件  获取当前时间 currentTime
+               // console.log(times.currentTime);
+               let playTime=times.currentTime; //获取当前播放时间 单位为秒
+               this.lrcList.forEach((elem,index)=>{
+                    //当前播放时间 在歌词信息里面的时间时间内 
+                    //console.log(elem.time,playTime);
+                   if(Math.ceil(elem.time)>= playTime&&Math.floor(elem.time)< playTime){
+                           this.lrcIndex=index;//index 歌词的索引
+                           //this.lrcIndex 被选中的歌词的索引
+                           this.$refs.lrc.scrollTop=this.lrcIndex*25;//滚动
 
-          
+                   }
+               });
+               
+            })
         },
         data() {
             return {
@@ -86,6 +100,8 @@ import '@/assets/font/iconfont.css';
                 isPlay:false,//是否播放
                 listShow:true,//歌单
                 musicAudio:'http://up.mcyt.net/down/43422.mp3',//歌曲的音频
+                lrcList:[],//歌词的数组
+                lrcIndex:-1,//歌词的索引
                 }
             },
         methods: {
@@ -105,11 +121,9 @@ import '@/assets/font/iconfont.css';
                 {
                     this.$refs.xx.play();//获取audio下的播放方法，播放音频
                 }
-
             },
             pause(){
                  this.$refs.xx.pause();
-
             },
             prev(){
                 this.nowIndex--;//
@@ -122,7 +136,6 @@ import '@/assets/font/iconfont.css';
                 if(this.nowIndex==this.musicInf.length){
                     this.nowIndex=0;
                 }
-
             },
             //解析歌词
             parseLrc(lrc){
@@ -138,12 +151,30 @@ import '@/assets/font/iconfont.css';
                     //  /([\d{2}:\d{2}.\d{2}])/ 加()为子表达式  输出结果和子表达式
                     //   /\[\d{2}:\d{2}.\d{2}\]/  时间
                    let time= elem.match(/\[\d{2}:\d{2}.\d{2}\]/)[0];
-                   let lyric=elem.split(time)[1];//分割出歌词
-                  // console.log(elem.split(time));
-                   console.log(time);
-                  console.log(lyric);
+                   if(time!=null){
+                         let lyric=elem.split(time)[1];//分割出歌词
+                        // console.log(elem.split(time));
+                       //console.log(time);
+                      //  console.log(lyric);
+                   
+                   //把时间转化成秒
+                   let timeReg=time.match(/(\d{2}):(\d{2}).(\d{2})/);
+                 // console.log(timeReg);
+                   //timeReg[1] 分钟 
+                   //timeReg[2] 秒
+                   //timeReg[3]  毫秒
+                   let time2Seconds=parseInt(timeReg[1])*60+parseInt(timeReg[2])+parseInt(timeReg[3])/1000;
+                  //  console.log(time2Seconds );//以秒为单位
+                //lrcList:[],//歌词的数组
 
-                })
+                    this.lrcList.push({
+                        time:time2Seconds,
+                        lrc:lyric,
+                    })
+                 }
+
+                });
+                //console.log(this.lrcList);
                 
 
             }
@@ -158,9 +189,11 @@ import '@/assets/font/iconfont.css';
                     this.albumAuthor=nowMusic.author;
                     this.albumImg=nowMusic.musicImgSrc;
                     this.musicAudio=nowMusic.src;
+                    this.lrcList=[];//歌词改变
+                    this.lrcIndex=-1;//选中的歌词
                     //加载歌词
                     axios.get('/'+nowMusic.lrc).then((lyrics)=>{
-                         this.parseLrc(lyrics.data)
+                         this.parseLrc(lyrics.data);//歌词解析
                         //console.log(lyrics.data);
                     }).catch(()=>{
                         console.log("Failed to get lyrics message!");
@@ -260,6 +293,16 @@ import '@/assets/font/iconfont.css';
         width: 100%;
         height: 1rem;
         background-color: #343433;
+    }
+}
+.lyric-Info{
+    padding-top: 2rem;
+    text-align: center;
+    height: 6.2rem;
+    overflow-y: scroll;
+    .selected{
+        color: #299557;
+        font-size:120%;
     }
 }
 
