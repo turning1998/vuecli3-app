@@ -2,10 +2,23 @@
 
  
 <!--
+ watch: {                   }//现有的属性
+ computed{}                  //
+
 //对选中列表变色
 （1）通过当前的索引与元素的下标相对应,如果一致则添加样式
  (2)
-//音频：<audio src=""></audio>
+ https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/audio
+//音频：<audio src=""  autoplay></audio>    
+属性 
+autoplay为自动播放
+controls 如果设置了该属性，浏览器将提供一个包含声音，播放进度，
+        播放暂停的控制面板，让用户可以控制音频的播放。
+ref
+方法
+pause 暂停事件
+play  播放事件
+playing
 视频
 -->
 <template>
@@ -20,10 +33,10 @@
                 <p class="album-Info-author">{{albumAuthor}}</p>
                <div class="album-Info-control">
                    <div class="album-Info-control-icon">
-                        <i class="icon iconfont icon-shangyishou"></i>
-                        <i class="icon iconfont icon-bofang" v-show="!isPlay" ></i>
-                        <i class="icon iconfont icon-zanting" v-show="isPlay"></i>
-                        <i class="icon iconfont icon-xiayishou"></i>
+                        <i class="icon iconfont icon-shangyishou" @click="prev()"></i>
+                        <i class="icon iconfont icon-bofang" v-show="!isPlay" @click="play()" ></i>
+                        <i class="icon iconfont icon-zanting" v-show="isPlay"  @click="pause()"></i>
+                        <i class="icon iconfont icon-xiayishou"   @click="next()"></i>
                    </div>
                    <span @click="listShow=!listShow" class="album-Info-control-menu">歌单</span>
                </div>
@@ -33,17 +46,16 @@
         <!--歌曲列表-->
         <transition name="fade">
             <ul class="music" v-show="listShow">
-                <li :class="['music-title',nowIndex==index?'selected':'']" v-for="(music,index) in musicInf" :key="index" @click="selected(music,index)">
+                <li :class="['music-title',nowIndex==index?'selected':'']" v-for="(music,index) in musicInf" :key="index" @click="selected(index)">
                     <span>{{music.title}}&nbsp;</span>-
                     <span>{{music.author}}</span>
                 </li>
             </ul>
         </transition>
-        <div>
-             <audio :src="musicAudio" autoplay></audio>
+        <!--音频-->
+        <div class="musicAudio">
+             <audio ref="xx"  :src="musicAudio" autoplay controls @play="isPlay=true" @pause="isPlay=false"></audio>
         </div>
-       
-       
     </div>
 </template>
 
@@ -54,8 +66,8 @@ import '@/assets/font/iconfont.css';
         props:["musicInf"],
         data() {
             return {
-                nowIndex:0,//当前选中歌曲的索引
-                albumImg:'http://omratag7g.bkt.clouddn.com/%E6%88%91%E8%A6%81%E4%BD%A0.jpg',
+                nowIndex:-1,//当前选中歌曲的索引
+                albumImg:"http://singerimg.kugou.com/uploadpic/softhead/400/20180718/20180718110356316.jpg",
                 albumTitle:"我要你",
                 albumAuthor:"老狼",
                 isPlay:false,//是否播放
@@ -64,17 +76,51 @@ import '@/assets/font/iconfont.css';
                 }
             },
         methods: {
-            selected(music,index){
+            selected(index){
                 this.nowIndex=index;
                 this.albumTitle=music.title;
                 this.albumAuthor=music.author;
                 this.albumImg=music.musicImgSrc;
                 this.musicAudio=music.src;
+            },
+           /*  playMusic(){
+                console.log(this.$refs.xx);//获取真实DOM结构
 
+            }, */
+            play(){
+                this.$refs.xx.play();//获取audio下的播放方法，播放音频
 
-            }
+            },
+            pause(){
+                 this.$refs.xx.pause();
+
+            },
+            prev(){
+                this.nowIndex--;
+                if(this.nowIndex<0){
+                    this.nowIndex=this.musicInf.length-1;
+                }
+            },
+            next(){
+                this.nowIndex++;
+                if(this.nowIndex==this.musicInf.length){
+                    this.nowIndex=0;
+                }
+
+            },
+           
             
-        }
+        },
+         watch: {                   
+                newIndex(){
+                    let nowMusic=this.musicInf[this.nowIndex];//当前音乐对应的信息
+                    this.albumTitle=nowMusic.title;
+                    this.albumAuthor=nowMusic.author;
+                    this.albumImg=nowMusic.musicImgSrc;
+                    this.musicAudio=nowMusic.src;
+                    
+                }
+            },
     }
    
 </script>
@@ -83,7 +129,7 @@ import '@/assets/font/iconfont.css';
 .music{
     position: fixed;
     bottom: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 1.8rem;
     height: 4rem;
     overflow-y: scroll;
     width: 100%;
@@ -157,6 +203,16 @@ import '@/assets/font/iconfont.css';
             transform: translateY(100%);
         }
 
+    }
+}
+.musicAudio{
+    position: fixed;
+    bottom: 0.8rem;
+    width: 100%;
+    & audio{
+        width: 100%;
+        height: 1rem;
+        background-color: #343433;
     }
 }
 
