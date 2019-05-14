@@ -1,6 +1,13 @@
+
+
+ 
+<!--
 //对选中列表变色
 （1）通过当前的索引与元素的下标相对应,如果一致则添加样式
  (2)
+//音频：<audio src=""></audio>
+视频
+-->
 <template>
     <div>
         <div class="album">
@@ -18,21 +25,25 @@
                         <i class="icon iconfont icon-zanting" v-show="isPlay"></i>
                         <i class="icon iconfont icon-xiayishou"></i>
                    </div>
-                   <span class="album-Info-control-menu">歌单</span>
-                  
+                   <span @click="listShow=!listShow" class="album-Info-control-menu">歌单</span>
                </div>
-
             </div>
-
         </div>
 
         <!--歌曲列表-->
-       <ul class="music">
-           <li :class="['music-title',nowIndex==index?'selected':'']" v-for="(music,index) in musicInf" :key="index" @click="selected(music,index)">
-               <span>{{music.title}}&nbsp;</span>-
-               <span>{{music.author}}</span>
-               </li>
-       </ul>
+        <transition name="fade">
+            <ul class="music" v-show="listShow">
+                <li :class="['music-title',nowIndex==index?'selected':'']" v-for="(music,index) in musicInf" :key="index" @click="selected(music,index)">
+                    <span>{{music.title}}&nbsp;</span>-
+                    <span>{{music.author}}</span>
+                </li>
+            </ul>
+        </transition>
+        <div>
+             <audio :src="musicAudio" autoplay></audio>
+        </div>
+       
+       
     </div>
 </template>
 
@@ -47,7 +58,9 @@ import '@/assets/font/iconfont.css';
                 albumImg:'http://omratag7g.bkt.clouddn.com/%E6%88%91%E8%A6%81%E4%BD%A0.jpg',
                 albumTitle:"我要你",
                 albumAuthor:"老狼",
-                isPlay:false,
+                isPlay:false,//是否播放
+                listShow:true,//歌单
+                musicAudio:'',//歌曲的音频
                 }
             },
         methods: {
@@ -56,6 +69,7 @@ import '@/assets/font/iconfont.css';
                 this.albumTitle=music.title;
                 this.albumAuthor=music.author;
                 this.albumImg=music.musicImgSrc;
+                this.musicAudio=music.src;
 
 
             }
@@ -122,6 +136,27 @@ import '@/assets/font/iconfont.css';
             }
 
         }
+    }
+}
+.fade{
+    &-enter{
+        transform: translateY(100%);
+        &-active{
+            transition: transform 1s ease;
+        }
+        &-to{
+            transform: translateY(0);
+        }
+    }
+    &-leave{
+        transform: translateY(0);
+        &-active{
+            transition: transform 1s ease;
+        }
+        &-to{
+            transform: translateY(100%);
+        }
+
     }
 }
 
